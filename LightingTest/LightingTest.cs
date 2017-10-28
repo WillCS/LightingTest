@@ -1,74 +1,62 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FarseerPhysics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace LightingTest {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class LightingTest : Game {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public GraphicsDeviceManager GraphicsDeviceManager;
+        private const int tickRate = 60;
+        private const float dt = 1.0F / tickRate;
+        private double accumulator = 0.0D;
+
+        private Level level;
+        private Map map;
+
+        private Matrix projectionMatrix;
 
         public LightingTest() {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            this.GraphicsDeviceManager = new GraphicsDeviceManager(this);
+            this.IsMouseVisible = true;
+            this.Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize() {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
+            this.map = Map.GetTestMap();
+            this.level = new Level(this.map);
+            this.level.InitDebugView(this.GraphicsDevice, this.Content);
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(20);
+            this.projectionMatrix = Matrix.CreateOrthographicOffCenter(0F,
+                ConvertUnits.ToSimUnits(this.GraphicsDeviceManager.GraphicsDevice.Viewport.Width),
+                ConvertUnits.ToSimUnits(this.GraphicsDeviceManager.GraphicsDevice.Viewport.Height),
+                0F, 0F, 1F);
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent() {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            base.LoadContent();
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent() {
-            // TODO: Unload any non ContentManager content here
+            base.UnloadContent();
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            this.accumulator += gameTime.ElapsedGameTime.TotalSeconds;
+            if(this.accumulator >= dt * 4) {
+                this.accumulator = dt * 4;
+            }
 
-            // TODO: Add your update logic here
+            while(this.accumulator >= dt) {
+                this.accumulator -= dt;
+                this.level.Step(dt);
+            }
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            this.level.Draw(this.projectionMatrix);
             base.Draw(gameTime);
         }
     }
