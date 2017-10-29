@@ -41,12 +41,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entity.cs" />
+    <Compile Include="EntityComponentLight.cs" />
     <Compile Include="LevelBuilder.cs" />
     <Compile Include="LightingTest.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="TestEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
@@ -56,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\cross.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

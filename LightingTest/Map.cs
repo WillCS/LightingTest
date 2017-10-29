@@ -46,12 +46,13 @@ namespace LightingTest {
         }
 
         public static Map GetTestMap() {
-            Map map = new Map(20, 20);
-
-            map[5, 5] = true;
-            map[6, 6] = true;
-            map[6, 7] = true;
-
+            Map map = new Map(30, 30);
+            Random rand = new Random();
+            for(int x = 0; x < 30; x++) {
+                for(int y = 0; y < 30; y++) {
+                    map[x, y] = rand.Next(0, 10) == 1 ? true : false;
+                }
+            }
             return map;
         }
     }
