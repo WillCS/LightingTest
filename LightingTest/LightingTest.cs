@@ -50,7 +50,7 @@ namespace LightingTest {
         }
 
         protected override void LoadContent() {
-            cross = this.Content.Load<Texture2D>("cross");
+            cross = this.Content.Load<Texture2D>("point");
             base.LoadContent();
         }
 
@@ -86,6 +86,8 @@ namespace LightingTest {
                 this.mouseDiff = Vector2.Zero;
             }
 
+            this.Window.Title = "FPS: " + 1.0F / gameTime.ElapsedGameTime.TotalSeconds;
+
             base.Update(gameTime);
         }
 
@@ -110,15 +112,6 @@ namespace LightingTest {
                 foreach(Entity entity in this.level.GetEntities()) {
                     entity.Draw(this.GraphicsDevice);
                 }
-
-                VertexPositionColor[] vertices = new VertexPositionColor[3];
-                vertices[0] = new VertexPositionColor(new Vector3(0, 1, 0), Color.Red);
-                vertices[1] = new VertexPositionColor(new Vector3(+0.5f, 0, 0), Color.Green);
-                vertices[2] = new VertexPositionColor(new Vector3(-0.5f, 0, 0), Color.Blue);
-                VertexBuffer vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 3, BufferUsage.WriteOnly);
-                vertexBuffer.SetData(vertices);
-
-                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
             }
         }
     }
